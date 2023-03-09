@@ -1,3 +1,4 @@
+# Imports:
 from turtle import color
 import numpy as np
 import cv2
@@ -5,22 +6,20 @@ import argparse
 from matplotlib import pyplot as plt
 import os
 
+from scipy import ndimage
 
+# Vars:
 MIN_MATCH_COUNT = 2
 
 parser = argparse.ArgumentParser(description='Template matcher')
-parser.add_argument('--template', type=str, action='store',
-                    help='The image to be used as template')
-parser.add_argument('--map', type=str, action='store',
-                    help='The image to be searched in')
-parser.add_argument('--show', action='store_true',
-                    help='Shows result image')
-parser.add_argument('--save-dir', type=str, default='./',
-                    help='Directory in which you desire to save the result image')
+parser.add_argument('--template', type=str, action='store', help='The image to be used as template')
+parser.add_argument('--map', type=str, action='store', help='The image to be searched in')
+parser.add_argument('--show', action='store_true', help='Shows result image')
+parser.add_argument('--save-dir', type=str, default='./', help='Directory in which you desire to save the result image')
 
 args = parser.parse_args()
 
-
+# Funcs:
 def get_matched_coordinates(temp_img, map_img):
     """
     Gets template and map image and returns matched coordinates in map image
@@ -63,52 +62,84 @@ def get_matched_coordinates(temp_img, map_img):
             good.append(m)
 
     if len(good) > MIN_MATCH_COUNT:
-        src_pts = np.float32(
-            [kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
-        dst_pts = np.float32(
-            [kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+        src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
+        dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
 
         # find homography
         M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
         matchesMask = mask.ravel().tolist()
 
         h, w = temp_img.shape
-        pts = np.float32([[0, 0], [0, h-1], [w-1, h-1],
-                          [w-1, 0]]).reshape(-1, 1, 2)
-        dst = cv2.perspectiveTransform(pts, M)  # matched coordinates
-        
-        map_img = cv2.polylines(
-            map_img, [np.int32(dst)], True, 255, 3, cv2.LINE_AA)
+        pts = np.float32([[0, 0], [0, h-1], [w-1, h-1], [w-1, 0]]).reshape(-1, 1, 2)
+        dst = cv2.perspectiveTransform(pts, M) # matched coordinates
 
+
+        rect = cv2.minAreaRect(dst)
+        test = np.int32(dst)
+
+        # go through all coordinates to find inddex of the highest point
+        for i in range(len(test)):
+            if (test[i][0][1] == test.min(axis=0)[0][-1]): # <- matching to highest point (lowest `y`)
+                orientation = i
+
+        # get found template's angle (by using cv2's approach to angles in `minAreaRect`)
+        angle = rect[-1]
+
+        # add offset to angle to correct the disc's rotation
+        print(angle)
+        angle += orientation * 90
+        print(angle)
+
+        # load unchanged map image
+        circle = cv2.imread('circle.png', cv2.IMREAD_UNCHANGED)
+
+        # center map image 
+        rotated_image = ndimage.rotate(circle, angle, reshape=False)
+
+        """
+        # using `cv2.getRotationMatrix2D` to get the rotation matrix
+        rotate_matrix = cv2.getRotationMatrix2D((circle.shape[1] / 2, circle.shape[0] / 2), angle, 1)
+        #                            center pos ^                              angle in deg ^      ^ scale
+        # rotating the image
+        rotated_image = cv2.warpAffine(circle, rotate_matrix, (circle.shape[1], circle.shape[0]))
+        """
+        # ^ CAN'T BE USED AS THE RESULT IS BLURRY AND FUGLY
+
+        # show to user
+        cv2.imshow('circle', rotated_image)
+        cv2.waitKey(0)
+
+        cv2.imwrite(os.path.join('fin.png'), rotated_image)
+
+        # drawing rectangle around found template on map image
+        map_img = cv2.polylines(map_img, [test[0], test[1], test[2]], True, 255, 3, cv2.LINE_AA)
     else:
-        print("Not enough matches are found - %d/%d" %
-              (len(good), MIN_MATCH_COUNT))
+        print("Not enough matches are found - %d/%d" % (len(good), MIN_MATCH_COUNT))
         matchesMask = None
 
-    draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
-                       singlePointColor=None,
-                       matchesMask=matchesMask,  # draw only inliers
-                       flags=2)
+    draw_params = dict(matchColor=(0, 255, 0), singlePointColor=None, matchesMask=matchesMask, flags=2)
+    #                  ^ draw matches in green      draw only inliers ^
 
     # draw template and map image, matches, and keypoints
-    img3 = cv2.drawMatches(temp_img, kp1, map_img, kp2,
-                           good, None, **draw_params)
+    img3 = cv2.drawMatches(temp_img, kp1, map_img, kp2, good, None, **draw_params)
 
     # if --show argument used, then show result image
     if args.show:
         plt.imshow(img3, 'gray'), plt.show()
 
     # result image path
-    if(args.save_dir != ''):
-        cv2.imwrite(os.path.join(args.save_dir), img3)
-    else:
+    if (args.save_dir != ''):
+        if not os.path.exists(args.save_dir):
+            os.mkdir(args.save_dir)
         cv2.imwrite(os.path.join(args.save_dir, 'output.jpg'), img3)
+    else:
+        cv2.imwrite(os.path.join('output.jpg'), img3)
 
     return dst
 
+# ---
 
 if __name__ == "__main__":
-
     # read images
     temp_img_gray = cv2.imread(args.template, 0)
     map_img_gray = cv2.imread(args.map, 0)
@@ -119,5 +150,3 @@ if __name__ == "__main__":
 
     # calculate matched coordinates
     coords = get_matched_coordinates(temp_img_eq, map_img_eq)
-
-    print(coords)
