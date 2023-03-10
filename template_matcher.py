@@ -128,7 +128,8 @@ def get_matched_coordinates(temp_img, map_img):
         plt.imshow(img3, 'gray'), plt.show()
 
     # result image path
-    if (args.save_dir != ''):
+    if (args.save_dir != '' and args.save_dir != './'):
+        #                          ubuntu fix ^
         if not os.path.exists(args.save_dir):
             os.mkdir(args.save_dir)
         cv2.imwrite(os.path.join(args.save_dir, 'output.jpg'), img3)
