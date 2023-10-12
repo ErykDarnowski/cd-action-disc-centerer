@@ -1,3 +1,5 @@
+## `py template_matcher.py --template template.png --map disc-scan.jpg --show`
+
 # Imports:
 from turtle import color
 import numpy as np

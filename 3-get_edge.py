@@ -1,8 +1,6 @@
 ## https://www.geeksforgeeks.org/python-edge-detection-using-pillow/
-# Imports:
 """
 from PIL import Image, ImageFilter
- 
  
 # Opening the image (R prefixed to string in order to deal with '\' in paths)
 image = Image.open('circle.png')
@@ -22,12 +20,13 @@ image = image.filter(ImageFilter.FIND_EDGES)
 image.save('edge_sample.png')
 """
 
-
 import cv2
 import numpy as np
 
+# Loading image in grayscale:
 img = cv2.imread('circle.png', 0)
-center = img.shape / 2
+
+center = img.shape
 x = center[1] - w/2
 y = center[0] - h/2
 img = img[y:y+h, x:x+w]
@@ -45,3 +44,6 @@ cv2.waitKey(0)
 
 indices = np.where(edges != [0])
 coordinates = zip(indices[0], indices[1])
+
+# cv2.imshow('test', img) 
+# cv2.waitKey(0) 
