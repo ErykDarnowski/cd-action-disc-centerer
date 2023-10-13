@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw
 
 
 # Vars:
-filename = 'disc-scan.jpg'
+filename = 'input.jpg'
 
 
 # Load image:

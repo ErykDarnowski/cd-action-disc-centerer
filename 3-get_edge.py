@@ -1,5 +1,4 @@
-## https://www.geeksforgeeks.org/python-edge-detection-using-pillow/
-"""
+""" https://www.geeksforgeeks.org/python-edge-detection-using-pillow/
 from PIL import Image, ImageFilter
  
 # Opening the image (R prefixed to string in order to deal with '\' in paths)
@@ -45,5 +44,7 @@ cv2.waitKey(0)
 indices = np.where(edges != [0])
 coordinates = zip(indices[0], indices[1])
 
-# cv2.imshow('test', img) 
-# cv2.waitKey(0) 
+""" show image to test
+cv2.imshow('test', img) 
+cv2.waitKey(0) 
+"""
