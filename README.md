@@ -1,8 +1,8 @@
-# cd-action-disc-centerer
+# CD-Action Disc Centerer
 
-A script for centering / leveling / straigtening scans of CD-ACTION discs.
+A script for centering / leveling / straitening scans of CD-Action discs.
 
-**NOT the best solution (I have never worked with cv2) but it works...**
+**This is most likely NOT the best solution (I've never worked with `cv2`) but it works and I imagine the resources bellow can also be pretty useful*
 
 ## TODO
 
@@ -34,8 +34,8 @@ A script for centering / leveling / straigtening scans of CD-ACTION discs.
 - [OpenCV - Edge detection](https://learnopencv.com/edge-detection-using-opencv/)
 - [OpenCV - Object detection](https://www.youtube.com/watch?v=OzWU18AwS9k)
 <!-- -->
-- [OpenCV / Pytesseract - Basic bill detection system (OCR)](https://www.youtube.com/watch?v=qfO9gqqMWxU)
-- [OpenCV / Pytesseract - Extract text from images in Python (OCR)](https://www.youtube.com/watch?v=PY_N1XdFp4w)
+- [Pytesseract - Basic bill detection system (OCR)](https://www.youtube.com/watch?v=qfO9gqqMWxU)
+- [Pytesseract - Extract text from images in Python (OCR)](https://www.youtube.com/watch?v=PY_N1XdFp4w)
 
 ### Transforms
 
