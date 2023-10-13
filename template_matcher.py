@@ -1,38 +1,34 @@
-## `py template_matcher.py --template template.png --map disc-scan.jpg --show`
+## `py template_matcher.py --template template.png --map input.jpg --show`
 
-# Imports:
-from turtle import color
-import numpy as np
+import os
 import cv2
 import argparse
-from matplotlib import pyplot as plt
-import os
-
+import numpy as np
+from turtle import color
 from scipy import ndimage
+from matplotlib import pyplot as plt
 
-# Vars:
-MIN_MATCH_COUNT = 2
-
+# cli args setup
 parser = argparse.ArgumentParser(description='Template matcher')
 parser.add_argument('--template', type=str, action='store', help='The image to be used as template')
 parser.add_argument('--map', type=str, action='store', help='The image to be searched in')
 parser.add_argument('--show', action='store_true', help='Shows result image')
 parser.add_argument('--save-dir', type=str, default='./', help='Directory in which you desire to save the result image')
-
 args = parser.parse_args()
 
-# Funcs:
+MIN_MATCH_COUNT = 2
+
 def get_matched_coordinates(temp_img, map_img):
     """
-    Gets template and map image and returns matched coordinates in map image
+    Gets template and map images and returns matched coordinates from the map image
 
     Parameters
     ----------
     temp_img: image
-        image to be used as template
+        image to be used as the template
 
     map_img: image 
-        image to be searched in
+        image for the template to be searched in
 
     Returns
     ---------
@@ -81,7 +77,7 @@ def get_matched_coordinates(temp_img, map_img):
 
         # go through all coordinates to find inddex of the highest point
         for i in range(len(test)):
-            if (test[i][0][1] == test.min(axis=0)[0][-1]): # <- matching to highest point (lowest `y`)
+            if (test[i][0][1] == test.min(axis=0)[0][-1]): # matching to highest point (lowest `y`)
                 orientation = i
 
         # get found template's angle (by using cv2's approach to angles in `minAreaRect`)
@@ -105,7 +101,7 @@ def get_matched_coordinates(temp_img, map_img):
         # rotating the image
         rotated_image = cv2.warpAffine(circle, rotate_matrix, (circle.shape[1], circle.shape[0]))
         """
-        # ^ CAN'T BE USED AS THE RESULT IS BLURRY AND FUGLY
+        # ^ CAN'T BE USED AS THE RESULT IS BLURRY AND UGLY
 
         # show to user
         cv2.imshow('circle', rotated_image)
@@ -125,7 +121,7 @@ def get_matched_coordinates(temp_img, map_img):
     # draw template and map image, matches, and keypoints
     img3 = cv2.drawMatches(temp_img, kp1, map_img, kp2, good, None, **draw_params)
 
-    # if --show argument used, then show result image
+    # if `--show` argument used, then show result image
     if args.show:
         plt.imshow(img3, 'gray'), plt.show()
 
