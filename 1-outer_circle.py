@@ -1,32 +1,29 @@
 ## https://stackoverflow.com/questions/58543750/whats-the-most-simple-way-to-crop-a-circle-thumbnail-from-an-image
-# Imports:
 from PIL import Image, ImageDraw
 
+filename = 'input_OG.jpg'
 
-# Vars:
-filename = 'input.jpg'
-
-
-# Load image:
+# load image
 img = Image.open(filename)
 
-# Crop image:
-size = 5645
+# crop image
+size = 5645 # basically size of the disc from edge left edge to the end of it - do this by edge / color diff detection?
 img_cropped = img.crop((0, 0, size, size))
 
-# Create grayscale image with white circle (255) on black background (0):
+# create grayscale image with white circle (255) on black background (0)
 mask = Image.new('L', img_cropped.size)
 mask_draw = ImageDraw.Draw(mask)
 width, height = img_cropped.size
 mask_draw.ellipse((0, 0, width, height), fill=255)
 #mask.show()
 
-# Add mask as alpha channel:
+# add mask as alpha channel
 img_cropped.putalpha(mask)
 
-# Save as png which keeps the alpha channel:
-img_cropped.save('circle.png')
+# save as png which keeps the alpha channel
+img_cropped.save('circle.png', quality=20, optimize=True)
 
 
-# Show final image:
+
+# show final image:
 #img_cropped.show()
