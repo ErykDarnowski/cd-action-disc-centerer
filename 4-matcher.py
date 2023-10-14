@@ -75,7 +75,7 @@ def get_matched_coordinates(temp_img, map_img):
         rect = cv2.minAreaRect(dst)
         test = np.int32(dst)
 
-        # go through all coordinates to find inddex of the highest point
+        # go through all coordinates to find index of the highest point
         for i in range(len(test)):
             if (test[i][0][1] == test.min(axis=0)[0][-1]): # matching to highest point (lowest `y`)
                 orientation = i
