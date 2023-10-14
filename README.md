@@ -2,7 +2,7 @@
 
 A script for centering / leveling / straitening scans of CD-Action discs.
 
-**This is most likely NOT the best solution (I've never worked with `cv2`) but it works and I imagine the resources bellow can also be pretty useful*
+**This is most likely NOT the best solution (I've never worked with `cv2`) but it works and I imagine the resources bellow can also be pretty useful**
 
 ## TODO
 
