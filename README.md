@@ -26,6 +26,7 @@ A script for centering / leveling / straitening scans of CD-Action discs.
 
 - [PIL - Reduce image file size](https://stackoverflow.com/questions/10607468/how-to-reduce-the-image-file-size-using-pil)
 - [OpenCV - Cropping an image](https://learnopencv.com/cropping-an-image-using-opencv/)
+- [OpenCV - Basic operations on images](https://docs.opencv.org/3.4/d3/df2/tutorial_py_basic_ops.html)
 - [OpenCV - Image file reading and writing](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html)
 
 ### Detection
