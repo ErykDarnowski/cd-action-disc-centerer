@@ -2,10 +2,14 @@
 
 - [ ] Overhaul repo
 	- [ ] `README.md`
+	- [ ] Comment format
+	- [ ] Approach to paths
 	- [ ] Detect missing files
 	- [ ] Combine in to pipeline
 	- [ ] Git submodules / credit
 	- [ ] Multi file architecture
+	- [ ] `TODO` comments in files
+	- [ ] How it works with other CDs
 	- [ ] CD scan (both license and size)
 	- [ ] Mess (remove unused code and such)
 	- [ ] Figure out dependabot security issues
@@ -15,6 +19,7 @@
 	- [ ] Move URLs from files to `README.md` -> `## Resources`
 	- [ ] Add a Nvim spell file (like [`pre-SELECTOR`](https://github.com/ErykDarnowski/pre-selector)) 
 	- [ ] Figure out what to do to finish up (like License and such)
+	- [ ] Less hardcoded more dynamic (e.g. edge detections and such)
 	- [ ] Just use a mask to cut out both **outside** and **inside** circles?
 	- [ ] Use formatter (black) or something (really simple `pre-commit` setup?)
 	- [ ] Checkout all the resources to refresh your memory / pick some better solution
