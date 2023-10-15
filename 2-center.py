@@ -1,5 +1,4 @@
 ## `py template_matcher.py --template template.png --map input.jpg --show`
-
 import os
 import cv2
 import argparse
@@ -8,15 +7,22 @@ from turtle import color
 from scipy import ndimage
 from matplotlib import pyplot as plt
 
+"""TODO
+- fix the hardcoded values / params and so on situation + compare with repo
+"""
+
 # cli args setup
 parser = argparse.ArgumentParser(description='Template matcher')
-parser.add_argument('--template', type=str, action='store', help='The image to be used as template')
-parser.add_argument('--map', type=str, action='store', help='The image to be searched in')
+parser.add_argument('--template', type=str, default='template.png', action='store', help='The image to be used as template')
+parser.add_argument('--map', type=str, default='circle.png', action='store', help='The image to be searched in')
 parser.add_argument('--show', action='store_true', help='Shows result image')
 parser.add_argument('--save-dir', type=str, default='./', help='Directory in which you desire to save the result image')
 args = parser.parse_args()
 
 MIN_MATCH_COUNT = 2
+
+debug_filename = 'debug.jpg'
+output_filename = 'output.png'
 
 def get_matched_coordinates(temp_img, map_img):
     """
@@ -89,7 +95,7 @@ def get_matched_coordinates(temp_img, map_img):
         print(angle)
 
         # load unchanged map image
-        circle = cv2.imread('circle.png', cv2.IMREAD_UNCHANGED)
+        circle = cv2.imread(args.map, cv2.IMREAD_UNCHANGED)
 
         # center map image 
         rotated_image = ndimage.rotate(circle, angle, reshape=False)
@@ -103,11 +109,11 @@ def get_matched_coordinates(temp_img, map_img):
         """
         # ^ CAN'T BE USED AS THE RESULT IS BLURRY AND UGLY
 
-        # show to user
-        cv2.imshow('circle', rotated_image)
-        cv2.waitKey(0)
+        # debug
+        #cv2.imshow('circle', rotated_image)
+        #cv2.waitKey(0)
 
-        cv2.imwrite(os.path.join('fin.png'), rotated_image)
+        cv2.imwrite(os.path.join(output_filename), rotated_image)
 
         # drawing rectangle around found template on map image
         map_img = cv2.polylines(map_img, [test[0], test[1], test[2]], True, 255, 3, cv2.LINE_AA)
@@ -130,9 +136,9 @@ def get_matched_coordinates(temp_img, map_img):
         #                          ubuntu fix ^
         if not os.path.exists(args.save_dir):
             os.mkdir(args.save_dir)
-        cv2.imwrite(os.path.join(args.save_dir, 'output.jpg'), img3)
+        cv2.imwrite(os.path.join(args.save_dir, debug_filename), img3)
     else:
-        cv2.imwrite(os.path.join('output.jpg'), img3)
+        cv2.imwrite(os.path.join(debug_filename), img3)
 
     return dst
 
