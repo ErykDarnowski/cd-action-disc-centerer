@@ -21,6 +21,7 @@ args = parser.parse_args()
 
 MIN_MATCH_COUNT = 2
 
+# hardcoded but goofy
 debug_filename = 'debug.jpg'
 output_filename = 'output.png'
 
@@ -43,7 +44,7 @@ def get_matched_coordinates(temp_img, map_img):
 
     """
 
-    # initiate SIFT detector
+    # initiate SIFT (Scale-Invariant Feature Transform) detector -> <https://docs.opencv.org/4.x/da/df5/tutorial_py_sift_intro.html>
     sift = cv2.SIFT_create()
 
     # find the keypoints and descriptors with SIFT
@@ -65,11 +66,12 @@ def get_matched_coordinates(temp_img, map_img):
         if m.distance < 0.7*n.distance:
             good.append(m)
 
+    # check if matches threshold was passed
     if len(good) > MIN_MATCH_COUNT:
         src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
 
-        # find homography
+        # find homography -> <https://en.wikipedia.org/wiki/Homography_(computer_vision)> / <https://en.wikipedia.org/wiki/Homography>
         M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
         matchesMask = mask.ravel().tolist()
 
@@ -78,21 +80,24 @@ def get_matched_coordinates(temp_img, map_img):
         dst = cv2.perspectiveTransform(pts, M) # matched coordinates
 
 
+        ## START
         rect = cv2.minAreaRect(dst)
         test = np.int32(dst)
 
         # go through all coordinates to find index of the highest point
         for i in range(len(test)):
-            if (test[i][0][1] == test.min(axis=0)[0][-1]): # matching to highest point (lowest `y`)
+            print(test[i])
+            if (test[i][0][1] == test.min(axis=0)[0][-1]): # match to highest point (lowest `y`)
                 orientation = i
 
         # get found template's angle (by using cv2's approach to angles in `minAreaRect`)
         angle = rect[-1]
 
         # add offset to angle to correct the disc's rotation
-        print(angle)
+        print(f"\norientation: {orientation}")
+        print(f"detected {round(angle)} deg")
         angle += orientation * 90
-        print(angle)
+        print(f"corrected: {round(angle)} deg")
 
         # load unchanged map image
         circle = cv2.imread(args.map, cv2.IMREAD_UNCHANGED)
@@ -109,11 +114,10 @@ def get_matched_coordinates(temp_img, map_img):
         """
         # ^ CAN'T BE USED AS THE RESULT IS BLURRY AND UGLY
 
-        # debug
-        #cv2.imshow('circle', rotated_image)
-        #cv2.waitKey(0)
-
+        # writing centered image
         cv2.imwrite(os.path.join(output_filename), rotated_image)
+        ## END
+
 
         # drawing rectangle around found template on map image
         map_img = cv2.polylines(map_img, [test[0], test[1], test[2]], True, 255, 3, cv2.LINE_AA)
