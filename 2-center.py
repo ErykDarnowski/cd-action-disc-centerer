@@ -134,7 +134,7 @@ def get_matched_coordinates(temp_img, map_img):
         # add offset to the angle to correct the disc's rotation
         print(f"\n  orientation: {orientation} ({orientation * 90}°)")
         print(f"  detected {round(angle)}°")
-        angle += orientation * 90 # angle is the amound of degrees the image needs to be roated (counter-clockwise) or by doing (360 - angle) clockwise
+        angle += (orientation * 90) + 90 # angle is the amount of degrees the image needs to be roated (counter-clockwise) or by doing (360 - angle) clockwise
         print(f"  corrected: {round(angle)}°")
 
         # load og map image
