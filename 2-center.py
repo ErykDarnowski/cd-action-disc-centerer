@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 # cli args setup
 parser = argparse.ArgumentParser(description='Template matcher')
 parser.add_argument('--template', type=str, default='template.png', action='store', help='The image to be used as template')
-parser.add_argument('--map', type=str, default='circle.png', action='store', help='The image to be searched in')
+parser.add_argument('--map', type=str, default='1_circle.png', action='store', help='The image to be searched in')
 parser.add_argument('--show', action='store_true', help='Shows result image')
 parser.add_argument('--save-dir', type=str, default='./', help='Directory in which you desire to save the result image')
 args = parser.parse_args()
@@ -22,8 +22,8 @@ args = parser.parse_args()
 MIN_MATCH_COUNT = 2
 
 # hardcoded
-debug_filename = 'debug.jpg'
-output_filename = 'output.png'
+debug_filename = '2_debug.png'
+output_filename = '3_output.png'
 
 def get_matched_coordinates(temp_img, map_img):
     """

@@ -28,9 +28,9 @@ rgba = [b, g, r, alpha]
 result = cv2.merge(rgba, 4) # add in the alpha channel (transparency)
 
 # save result
-cv2.imwrite('circle.png', result)
+cv2.imwrite('1_circle.png', result)
 
 """ debug
-cv2.imshow('circle', tmp)
+cv2.imshow('1_circle', tmp)
 cv2.waitKey(0)
 """
